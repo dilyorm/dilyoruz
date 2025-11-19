@@ -1,0 +1,56 @@
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Experience from './components/Experience';
+import Projects from './components/Projects';
+import Skills from './components/Skills';
+import Achievements from './components/Achievements';
+import Contact from './components/Contact';
+import ScrollToTop from './components/ScrollToTop';
+import BootScreen from './components/BootScreen';
+
+function App() {
+  const [isBooted, setIsBooted] = useState(false);
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <>
+      <AnimatePresence>
+        {!isBooted && <BootScreen onBootComplete={() => setIsBooted(true)} />}
+      </AnimatePresence>
+      
+      <AnimatePresence>
+        {isBooted && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="min-h-screen"
+          >
+            <Navbar />
+            <main>
+              <Hero />
+              <About />
+              <Experience />
+              <Projects />
+              <Skills />
+              <Achievements />
+              <Contact />
+            </main>
+            <footer className="py-8 px-4 text-center text-white/40 text-sm">
+              <p>
+                © {currentYear} Muhammadjonov Dilyorbek · Built with ♥ and a lot of Python.
+              </p>
+            </footer>
+            <ScrollToTop />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+export default App;
+
