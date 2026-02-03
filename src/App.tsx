@@ -10,6 +10,7 @@ import Achievements from './components/Achievements';
 import Contact from './components/Contact';
 import ScrollToTop from './components/ScrollToTop';
 import BootScreen from './components/BootScreen';
+import { personalInfo } from './data/data';
 
 function App() {
   const [isBooted, setIsBooted] = useState(false);
@@ -41,7 +42,22 @@ function App() {
             </main>
             <footer className="py-8 px-4 text-center text-white/40 text-sm">
               <p>
-                © {currentYear} Muhammadjonov Dilyorbek · Built with ♥ and a lot of Python.
+                © {currentYear} Muhammadjonov Dilyorbek · Contact:{' '}
+                <a
+                  href={`mailto:${personalInfo.email}`}
+                  className="text-white/60 hover:text-white underline underline-offset-4"
+                >
+                  {personalInfo.email}
+                </a>{' '}
+                · Telegram:{' '}
+                <a
+                  href={`https://${personalInfo.telegram}`}
+                  className="text-white/60 hover:text-white underline underline-offset-4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {personalInfo.telegram}
+                </a>
               </p>
             </footer>
             <ScrollToTop />

@@ -54,6 +54,16 @@ const Projects = () => {
               <p className="text-white/70 mb-4 flex-grow leading-relaxed relative z-10">
                 {project.description}
               </p>
+              {project.link && (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center text-sm text-blue-300 hover:text-blue-200 underline relative z-10"
+                >
+                  View on GitHub
+                </a>
+              )}
               {project.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-4 relative z-10">
                   {project.tags.map((tag) => (

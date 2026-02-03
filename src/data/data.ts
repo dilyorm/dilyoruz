@@ -52,9 +52,16 @@ export const projects = [
     tags: ["LLM", "Speech Recognition", "NLP", "Summarization"]
   },
   {
-    title: "More projects coming soon...",
-    description: "Working on exciting new projects in AI and ML. Stay tuned!",
-    tags: []
+    title: "Credit Scoring – Loan Default Prediction",
+    description: "Ensemble-based credit scoring pipeline for predicting loan defaults, built for the CBU Coding Challenge. Uses multiple feature sets and stacked models (LightGBM, XGBoost, CatBoost, MLP, TabM) to achieve robust performance.",
+    tags: ["Machine Learning", "Tabular Data", "Ensemble", "Python"],
+    link: "https://github.com/dilyorm/cbu-coding-datavision"
+  },
+  {
+    title: "ACAR – Anti-Corruption Analytics & Reporting",
+    description: "Anti-corruption analytics project that uses data-driven methods to surface anomalies and support transparency and accountability in organizational processes.",
+    tags: ["Data Science", "Analytics", "Anti-corruption", "Python"],
+    link: "https://github.com/azxav/ACAR"
   }
 ];
 
@@ -81,10 +88,10 @@ export const achievements = [
     icon: "💻"
   },
   {
-    title: "IYMC",
-    subtitle: "Bronze Finalist",
-    description: "Bronze medal in international math Olympiad after two stages.",
-    icon: "📐"
+    title: "CBU Coding Challenge",
+    subtitle: "3rd place – Credit Scoring",
+    description: "Third place at the CBU Coding Challenge with a loan default credit score prediction model powering risk-aware lending decisions.",
+    icon: "📊"
   }
 ];
 
