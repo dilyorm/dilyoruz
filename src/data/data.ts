@@ -5,6 +5,7 @@ export const personalInfo = {
   location: "Tashkent",
   tagline: "I build intelligent systems in computer vision, NLP, and machine learning — from Uzbek speech recognition to retrieval-augmented customer support.",
   email: "d.muhammadjonov@newuu.uz",
+  displayEmail: "dilyoruz@dilyoruz",
   telegram: "t.me/dilyor_m",
   linkedin: "linkedin.com/in/dilyor",
 };

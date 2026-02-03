@@ -11,6 +11,7 @@ import Contact from './components/Contact';
 import ScrollToTop from './components/ScrollToTop';
 import BootScreen from './components/BootScreen';
 import { personalInfo } from './data/data';
+import LegoAvatar from './components/LegoAvatar';
 
 function App() {
   const [isBooted, setIsBooted] = useState(false);
@@ -21,7 +22,7 @@ function App() {
       <AnimatePresence>
         {!isBooted && <BootScreen onBootComplete={() => setIsBooted(true)} />}
       </AnimatePresence>
-      
+
       <AnimatePresence>
         {isBooted && (
           <motion.div
@@ -47,7 +48,7 @@ function App() {
                   href={`mailto:${personalInfo.email}`}
                   className="text-white/60 hover:text-white underline underline-offset-4"
                 >
-                  {personalInfo.email}
+                  {personalInfo.displayEmail || personalInfo.email}
                 </a>{' '}
                 · Telegram:{' '}
                 <a
@@ -61,6 +62,7 @@ function App() {
               </p>
             </footer>
             <ScrollToTop />
+            <LegoAvatar />
           </motion.div>
         )}
       </AnimatePresence>

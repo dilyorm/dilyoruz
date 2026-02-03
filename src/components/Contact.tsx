@@ -37,7 +37,7 @@ const Contact = () => {
 
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
-      
+
       // Reset success message after 5 seconds
       setTimeout(() => {
         setSubmitStatus('idle');
@@ -45,7 +45,7 @@ const Contact = () => {
     } catch (error) {
       console.error('EmailJS error:', error);
       setSubmitStatus('error');
-      
+
       // Reset error message after 5 seconds
       setTimeout(() => {
         setSubmitStatus('idle');
@@ -65,7 +65,7 @@ const Contact = () => {
   const contactMethods = [
     {
       name: 'Email',
-      value: personalInfo.email,
+      value: personalInfo.displayEmail || personalInfo.email,
       href: `mailto:${personalInfo.email}`,
       icon: '✉️',
     },
