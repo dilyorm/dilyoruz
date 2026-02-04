@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ReactGA from "react-ga4";
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -16,6 +17,17 @@ import LegoAvatar from './components/LegoAvatar';
 function App() {
   const [isBooted, setIsBooted] = useState(false);
   const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    // Initialize Google Analytics
+    // Replace with your Measurement ID
+    const gaId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
+    if (gaId && gaId !== 'G-MEASUREMENT_ID') {
+      ReactGA.initialize(gaId);
+      // Send pageview with a custom path
+      ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+    }
+  }, []);
 
   return (
     <>
