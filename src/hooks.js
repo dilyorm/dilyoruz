@@ -40,12 +40,12 @@ async function openDota(id) {
     getJSON('https://api.opendota.com/api/constants/heroes'),
   ])
   const total = wl.win + wl.lose
-  // Hidden match data comes back as 0-0; keep the sample numbers instead of showing zeros.
+  // Hidden match data comes back as 0-0; keep the "hidden" note instead of showing zeros.
   if (!total) throw new Error('no public matches (turn on "Expose Public Match Data" in Dota)')
   const top = heroes[0] && names[heroes[0].hero_id]
   const tier = p.rank_tier ? MEDALS[Math.floor(p.rank_tier / 10) - 1] : 'Unranked'
   return {
-    sample: false,
+    hidden: false,
     rank: tier,
     stats: [
       { k: 'Matches', v: fmt(total) },

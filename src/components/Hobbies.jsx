@@ -141,13 +141,20 @@ function DotaPanel({ data }) {
       <div className="panel-copy">
         <h3 id="h-dota" className="panel-title">Dota 2</h3>
         <p className="panel-lede">Five heroes, three lanes, and always one more game.</p>
-        {!data.sample && (
-          <p className="dota-rank">
-            <span>Rank</span>
-            {data.rank}
+        {data.hidden ? (
+          <p className="dota-hidden">
+            Match history is private on Steam right now, so there are no numbers to show. They appear here on their own
+            once it is public.
           </p>
+        ) : (
+          <>
+            <p className="dota-rank">
+              <span>Rank</span>
+              {data.rank}
+            </p>
+            <Stats data={data} label="Dota 2 stats" />
+          </>
         )}
-        <Stats data={data} label="Dota 2 stats" />
         <a className="steam-link" href={STEAM.dota} target="_blank" rel="noreferrer">
           Steam profile
         </a>

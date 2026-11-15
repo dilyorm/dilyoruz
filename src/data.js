@@ -78,8 +78,8 @@ export const TROPHIES = [
   { rank: 'Bronze', title: 'International Youth Math Challenge', detail: 'Two international stages' },
 ]
 
-// Hobby stats. `sample` numbers are stand-ins until a handle is filled in below;
-// with a handle set, the page fetches live numbers and drops the "sample" tag.
+// Hobby stats: saved real numbers that show first, then live numbers for every
+// handle set below. Nothing here is made up.
 export const HANDLES = {
   chessCom: 'dilyorbekmuhammadjonov',
   openDotaId: 1507943254, // steam id/dilyor_m; OpenDota shows no matches until "Expose Public Match Data" is on
@@ -103,15 +103,9 @@ export const HOBBIES = {
       { k: 'Puzzles peak', v: '2000' },
     ],
   },
-  dota: {
-    sample: true,
-    rank: 'Legend',
-    stats: [
-      { k: 'Matches', v: '2,310' },
-      { k: 'Win rate', v: '51.8%' },
-      { k: 'Main', v: 'Invoker' },
-    ],
-  },
+  // Live from OpenDota. Until Dota's "Expose Public Match Data" is on, OpenDota
+  // sees no matches, so the room says so instead of showing made-up numbers.
+  dota: { hidden: true, stats: [] },
   // From the public Steam profile on 2026-11-15. Valve has no public API for
   // Premier rating or K/D, so those get typed in here when known.
   cs2: {
