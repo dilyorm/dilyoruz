@@ -1,0 +1,65 @@
+[
+  {
+    "name": "BIL",
+    "tag": "Speech",
+    "what": "Uzbek speech intelligence: transcribe, pull key points, summarise",
+    "body": "Record a lecture, a meeting or a voice note in Uzbek and get back a transcript, the key points and a short summary.\n\n- Uzbek speech-to-text\n- Key-point extraction and summarisation on top of the transcript\n- Syncs across devices",
+    "stack": ["Speech-to-text", "NLP", "LLMs"],
+    "links": [{ "label": "GitHub", "href": "https://github.com/dilyorm/bil" }],
+    "year": ""
+  },
+  {
+    "name": "Uzbek Gemma",
+    "tag": "LLM",
+    "what": "Uzbek-first LLM: continued pretraining and SFT on Gemma 4",
+    "body": "A tuning pipeline that teaches Gemma 4 to think in Uzbek first.\n\n- Continued pretraining on Uzbek text\n- Supervised fine-tuning on instructions\n- Trained on a rented Linux GPU box",
+    "stack": ["Gemma 4", "PyTorch", "SFT"],
+    "links": [{ "label": "GitHub", "href": "https://github.com/dilyorm/uzbek-gemma4" }],
+    "year": "2026"
+  },
+  {
+    "name": "OpenClaw",
+    "tag": "Robotics",
+    "what": "Talk to a lidar robot on a Raspberry Pi in plain language",
+    "body": "Tell the robot what to do in plain words and an LLM turns it into safe motion.\n\n- Raspberry Pi 5 with a lidar\n- ROS 2 running in Docker, bridged to the model through MCP tools\n- Safety logic between the model and the motors",
+    "stack": ["ROS 2", "MCP", "Raspberry Pi", "Docker"],
+    "links": [{ "label": "GitHub", "href": "https://github.com/dilyorm/openclaw-robot" }],
+    "year": "2026"
+  },
+  {
+    "name": "CTF Platform",
+    "tag": "Security",
+    "what": "Auto-solver and team management for capture-the-flag events",
+    "body": "Tooling for team XYLO: an agent that takes a first pass at challenges, plus the boring parts of running a team.\n\n- Works with CTFd and rCTF boards\n- Team and challenge management",
+    "stack": ["Agents", "CTFd", "rCTF"],
+    "links": [{ "label": "Live", "href": "https://ctf.dilyor.dev" }],
+    "year": ""
+  },
+  {
+    "name": "Vibe",
+    "tag": "Audio",
+    "what": "Reads a song and shows its mood and structure",
+    "body": "Drop in a track and see how it moves: mood over time and where the sections change.",
+    "stack": ["Audio ML"],
+    "links": [{ "label": "Live", "href": "https://vibe.dilyor.dev" }],
+    "year": ""
+  },
+  {
+    "name": "Credit scoring",
+    "tag": "ML",
+    "what": "Loan default prediction for the CBU Coding Challenge",
+    "body": "A loan-default model built for the Central Bank of Uzbekistan's Coding Challenge. Took 3rd place.",
+    "stack": ["Tabular ML", "Python"],
+    "links": [{ "label": "GitHub", "href": "https://github.com/dilyorm/cbu-coding-datavision" }],
+    "year": ""
+  },
+  {
+    "name": "ACAR",
+    "tag": "Data",
+    "what": "Anti-corruption analytics and reporting",
+    "body": "Analytics and reporting that help spot corruption risk in the data.",
+    "stack": ["Analytics"],
+    "links": [{ "label": "GitHub", "href": "https://github.com/azxav/ACAR" }],
+    "year": ""
+  }
+]

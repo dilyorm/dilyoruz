@@ -1,68 +1,29 @@
-# Dilyorbek Portfolio
+# kyosan
 
-A modern, single-page portfolio website built with React, TypeScript, Vite, Tailwind CSS, and Framer Motion.
+Personal site of Dilyorbek Muhammadjonov (kyosan): a skate-poster landing page, hobby rooms with live stats, a blog, and an admin panel.
 
-## Features
+## Layout
 
-- 🎨 Dark theme with circuit board aesthetic
-- ⚡ Smooth animations with Framer Motion
-- 📱 Fully responsive (mobile-first)
-- 🎯 Single-page scrollable sections
-- ✨ Glass morphism cards
-- 🔗 Smooth scrolling navigation
+- `src/` – React 18 + Vite + framer-motion. Routes: `/`, `/blog`, `/blog/:slug`, `/admin`.
+- `server/` – FastAPI + SQLite. Projects, blog posts, image uploads, admin login, and two proxies:
+  - `/api/faceit` – FACEIT level and elo (FACEIT has no CORS).
+  - `/api/music` – listening data from [avj](https://avj.dilyor.dev) (`/api/public/{handle}/music`), with 30 s preview clips.
+- `art/` – scripts that build the pixel sprite and cursors.
 
-## Tech Stack
+Live stats that need no server (chess.com, OpenDota, Codeforces, Monkeytype) are fetched straight from the browser; saved snapshots in `src/data.js` show until they answer.
 
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
+## Run locally
 
-## Getting Started
-
-### Installation
-
-```bash
+```sh
 npm install
+cp server/.env.example server/.env   # set KYO_ADMIN_PASSWORD and KYO_SECRET
+pip install -r server/requirements.txt
+sh server/dev.sh                     # API on :8787
+npm run dev                          # site; /api and /uploads are proxied to :8787
 ```
 
-### Development
+Tests: `cd server && python -m pytest`.
 
-```bash
-npm run dev
-```
+## Deploy
 
-### Build
-
-```bash
-npm run build
-```
-
-### Preview
-
-```bash
-npm run preview
-```
-
-## Project Structure
-
-```
-src/
-├── components/     # React components
-├── data/          # Data files
-├── App.tsx        # Main app component
-├── main.tsx       # Entry point
-└── index.css      # Global styles
-```
-
-## Sections
-
-1. **Hero** - Introduction with animated circuit background
-2. **About** - Personal description and education
-3. **Experience** - Work experience timeline
-4. **Projects** - Project showcase
-5. **Skills** - Technical skills and languages
-6. **Achievements** - Awards and certifications
-7. **Contact** - Contact form and links
-
+`npm run build`, then either serve `dist/` with nginx and route `/api` + `/uploads` to the API, or set `KYO_DIST=../dist` and let the API serve everything. Keep `KYO_SECURE_COOKIE=1` behind HTTPS. On a static host without the API, the site still works: projects come from `server/seed_projects.json`, the blog shows as resting, admin is unavailable.
