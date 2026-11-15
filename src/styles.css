@@ -909,6 +909,8 @@ img {
 /* ---------- trophies: navy, lift passes ---------- */
 
 .trophies {
+  overflow-x: hidden; /* tilted passes poke out a few px */
+  overflow-x: clip;
   background: var(--navy);
   padding: clamp(80px, 10vw, 160px) var(--gutter);
 }
@@ -2493,6 +2495,7 @@ img {
 
 .prose {
   margin-top: 40px;
+  overflow-wrap: anywhere;
   font-size: 19px;
   line-height: 1.7;
   color: #18224a;
@@ -2598,7 +2601,9 @@ img {
 }
 
 .prose table {
-  width: 100%;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   font-size: 16px;
 }
@@ -2608,6 +2613,36 @@ img {
   padding: 8px 10px;
   border-bottom: 2px solid #e2dfd2;
   text-align: left;
+}
+
+/* ---------- touch: 44px hit areas without changing the layout ---------- */
+
+@media (pointer: coarse) {
+  .nav nav a,
+  .logo,
+  .contact-foot a,
+  .zine-link,
+  .zine-home,
+  .steam-link,
+  .cf-link,
+  .adm-quiet,
+  .post-foot a {
+    position: relative;
+  }
+
+  .nav nav a::before,
+  .logo::before,
+  .contact-foot a::before,
+  .zine-link::before,
+  .zine-home::before,
+  .steam-link::before,
+  .cf-link::before,
+  .adm-quiet::before,
+  .post-foot a::before {
+    content: '';
+    position: absolute;
+    inset: -12px -6px;
+  }
 }
 
 /* ---------- small screens ---------- */

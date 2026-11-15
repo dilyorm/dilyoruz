@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
+import { useMedia } from '../hooks'
 
 const WORDS = (
   'train ship break fix skate model loss batch token agent robot speech rail board push kick flip ' +
@@ -20,6 +21,7 @@ function TypingTest({ best }) {
   const [start, setStart] = useState(null)
   const [end, setEnd] = useState(null)
   const input = useRef(null)
+  const touch = useMedia('(hover: none)')
 
   const correct = useMemo(() => [...typed].filter((c, i) => c === target[i]).length, [typed, target])
   const done = end !== null
@@ -66,7 +68,7 @@ function TypingTest({ best }) {
             )
           })}
         </span>
-        {!start && <span className="typer-hint pixel-label">Click here and type</span>}
+        {!start && <span className="typer-hint pixel-label">{touch ? 'Tap here and type' : 'Click here and type'}</span>}
       </label>
       <div className="typer-bar" aria-live="polite">
         <span>

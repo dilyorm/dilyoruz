@@ -149,6 +149,7 @@ function Faceit({ data }) {
 const BOTS = ['BOT Gabe', 'BOT Vladimir', 'BOT Rip', 'BOT Moe', 'BOT Zach', 'BOT Ringo', 'BOT Hank']
 
 function CsPanel({ data, faceit }) {
+  const touch = useMedia('(hover: none)')
   const ref = useRef(null)
   const [holes, setHoles] = useState([])
   const sx = useSpring(0, { stiffness: 500, damping: 40 })
@@ -197,7 +198,9 @@ function CsPanel({ data, faceit }) {
         <a className="steam-link" href={STEAM.cs2} target="_blank" rel="noreferrer">
           Steam profile
         </a>
-        <p className="pixel-label cs-hint">Click to shoot, {holes.length} shots fired</p>
+        <p className="pixel-label cs-hint">
+          {touch ? 'Tap' : 'Click'} to shoot, {holes.length} shots fired
+        </p>
       </div>
       <ol className="killfeed" aria-live="polite">
         <AnimatePresence initial={false}>
