@@ -125,3 +125,12 @@ def test_lockout_follows_forwarded_client_ip(tmp_path):
     assert c.post("/api/admin/login", json={"password": "pw"}, headers={"X-Forwarded-For": "1.1.1.1"}).status_code == 429
     # someone else behind the same proxy is not locked out
     assert c.post("/api/admin/login", json={"password": "pw"}, headers={"X-Forwarded-For": "2.2.2.2"}).status_code == 200
+
+
+def test_global_cap_stops_ip_rotation(tmp_path):
+    c = proxied(tmp_path)
+    for i in range(30):  # a spoofed X-Forwarded-For per try dodges the per-IP limit...
+        c.post("/api/admin/login", json={"password": "no"}, headers={"X-Forwarded-For": f"10.0.0.{i}"})
+    # ...but not the cap on all failures together
+    r = c.post("/api/admin/login", json={"password": "pw"}, headers={"X-Forwarded-For": "9.9.9.9"})
+    assert r.status_code == 429

@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field
 HERE = Path(__file__).parent
 COOKIE = "kyo_admin"
 SESSION_SECONDS = 14 * 24 * 3600
+GLOBAL_FAILS = 30  # wrong passwords from all IPs together per 15 min before login pauses
 MAX_UPLOAD = 4 * 1024 * 1024  # stays under the 4.5 MB request body limit of Vercel
 IMAGE_TYPES = {  # magic bytes -> extension; anything else is refused
     b"\x89PNG\r\n\x1a\n": ".png",
@@ -356,6 +357,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     allowed = {urlparse(o.strip()).netloc for o in s.site_origins.split(",") if o.strip()}
 
     def client_ip(request: Request) -> str:
+        # Vercel sets the leftmost entry. Someone calling the API host directly can
+        # forge it, so the per-IP limit is a courtesy; GLOBAL_FAILS is the real cap.
         if s.trust_proxy:
             fwd = request.headers.get("x-forwarded-for", "").split(",")[0].strip()
             if fwd:
@@ -411,10 +414,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(503, "Admin is not configured on the server")
         ip = client_ip(request)
         recent = [t for t in failed.get(ip, []) if time.time() - t < 900]
-        if len(recent) >= 5:
+        everyone = [t for t in failed.get("*", []) if time.time() - t < 900]
+        if len(recent) >= 5 or len(everyone) >= GLOBAL_FAILS:
             raise HTTPException(429, "Too many attempts, try again in 15 minutes")
         if not hmac.compare_digest(body.password.encode(), s.admin_password.encode()):
             failed[ip] = recent + [time.time()]
+            failed["*"] = everyone + [time.time()]
+            if len(failed) > 1000:  # forged IPs must not grow this forever
+                for k in [k for k, v in failed.items() if k != "*" and time.time() - v[-1] > 900]:
+                    del failed[k]
             raise HTTPException(401, "Wrong password")
         failed.pop(ip, None)
         token = sign(s.secret, int(time.time()) + SESSION_SECONDS)
