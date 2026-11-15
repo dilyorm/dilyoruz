@@ -27,7 +27,7 @@ from pydantic import BaseModel, Field
 HERE = Path(__file__).parent
 COOKIE = "kyo_admin"
 SESSION_SECONDS = 14 * 24 * 3600
-MAX_UPLOAD = 6 * 1024 * 1024
+MAX_UPLOAD = 4 * 1024 * 1024  # stays under the 4.5 MB request body limit of Vercel
 IMAGE_TYPES = {  # magic bytes -> extension; anything else is refused
     b"\x89PNG\r\n\x1a\n": ".png",
     b"\xff\xd8\xff": ".jpg",
@@ -46,6 +46,10 @@ class Settings(BaseModel):
     faceit_api_key: str = os.environ.get("FACEIT_API_KEY", "")
     avj_url: str = os.environ.get("AVJ_URL", "https://avj.dilyor.dev")
     avj_handle: str = os.environ.get("AVJ_HANDLE", "dilyor")
+    # Behind a proxy (Vercel -> nginx -> here): the site's own origins may write,
+    # and the client IP comes from X-Forwarded-For instead of the socket.
+    site_origins: str = os.environ.get("KYO_SITE_ORIGINS", "")
+    trust_proxy: bool = os.environ.get("KYO_TRUST_PROXY", "0") == "1"
 
 
 # ---------- storage ----------
@@ -349,6 +353,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     uploads.mkdir(parents=True, exist_ok=True)
     cache = Cache()
     failed: dict[str, list[float]] = {}
+    allowed = {urlparse(o.strip()).netloc for o in s.site_origins.split(",") if o.strip()}
+
+    def client_ip(request: Request) -> str:
+        if s.trust_proxy:
+            fwd = request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+            if fwd:
+                return fwd
+        return request.client.host if request.client else "?"
 
     app = FastAPI(title="kyosan", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.store = store
@@ -360,7 +372,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         # cross-origin writes from browsers that send an Origin header.
         origin = request.headers.get("origin")
         if request.method not in ("GET", "HEAD") and origin:
-            if urlparse(origin).netloc != request.headers.get("host"):
+            netloc = urlparse(origin).netloc
+            if netloc != request.headers.get("host") and netloc not in allowed:
                 raise HTTPException(403, "Bad origin")
 
     # public
@@ -396,7 +409,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def login(body: LoginIn, request: Request, response: Response):
         if not s.admin_password or not s.secret:
             raise HTTPException(503, "Admin is not configured on the server")
-        ip = request.client.host if request.client else "?"
+        ip = client_ip(request)
         recent = [t for t in failed.get(ip, []) if time.time() - t < 900]
         if len(recent) >= 5:
             raise HTTPException(429, "Too many attempts, try again in 15 minutes")
@@ -478,7 +491,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def upload(file: UploadFile = File(...)):
         data = await file.read(MAX_UPLOAD + 1)
         if len(data) > MAX_UPLOAD:
-            raise HTTPException(413, "Images up to 6 MB")
+            raise HTTPException(413, "Images up to 4 MB")
         ext = next((e for magic, e in IMAGE_TYPES.items() if data.startswith(magic)), None)
         if ext is None and data[:4] == b"RIFF" and data[8:12] == b"WEBP":
             ext = ".webp"

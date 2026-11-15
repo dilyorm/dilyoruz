@@ -1,0 +1,12 @@
+# On oraclewps: ~/kyosan/compose.yml, next to server/ and .env
+services:
+  api:
+    build: ./server
+    env_file: .env
+    # run as the host user that owns ./data (KYO_UID/KYO_GID in .env)
+    user: "${KYO_UID:-1000}:${KYO_GID:-1000}"
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:8790:8000"
+    restart: unless-stopped

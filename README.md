@@ -26,4 +26,16 @@ Tests: `cd server && python -m pytest`.
 
 ## Deploy
 
-`npm run build`, then either serve `dist/` with nginx and route `/api` + `/uploads` to the API, or set `KYO_DIST=../dist` and let the API serve everything. Keep `KYO_SECURE_COOKIE=1` behind HTTPS. On a static host without the API, the site still works: projects come from `server/seed_projects.json`, the blog shows as resting, admin is unavailable.
+Live setup: **Vercel** serves the built site at dilyor.uz (project `dm-web`, deployed with `vercel --prod`) and `vercel.json` proxies `/api` and `/uploads` to **api.dilyor.uz**: nginx on oraclewps in front of the API container.
+
+API on the server (`~/kyosan`):
+
+```sh
+scp server/{app.py,seed_projects.json,Dockerfile,.dockerignore} oraclewps:kyosan/server/
+scp deploy/compose.yml oraclewps:kyosan/compose.yml
+ssh oraclewps 'cd ~/kyosan && docker compose up -d --build'
+```
+
+`~/kyosan/.env` holds the admin password and secret (mode 600, never committed), plus `KYO_SITE_ORIGINS`, `KYO_TRUST_PROXY=1` and `KYO_UID`/`KYO_GID` (owner of `./data`). The SQLite DB and uploaded images live in `~/kyosan/data`; back that folder up. nginx config: `deploy/nginx-api.dilyor.uz.conf`, TLS by certbot.
+
+Without the API the site still works: projects come from `server/seed_projects.json`, the blog shows as resting, admin is unavailable. Uploads are capped at 4 MB to fit the request limit of Vercel.

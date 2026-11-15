@@ -101,3 +101,27 @@ def test_upload_images_only(client):
 def test_admin_unconfigured(tmp_path):
     c = TestClient(create_app(Settings(data_dir=tmp_path, admin_password="", secret="")))
     assert c.post("/api/admin/login", json={"password": ""}).status_code == 503
+
+
+def proxied(tmp_path):
+    s = Settings(data_dir=tmp_path, admin_password="pw", secret="s3cret", secure_cookie=False,
+                 site_origins="https://dilyor.uz, https://www.dilyor.uz", trust_proxy=True)
+    return TestClient(create_app(s), base_url="http://api.dilyor.uz")
+
+
+def test_site_origin_may_write_through_proxy(tmp_path):
+    c = proxied(tmp_path)
+    login(c)
+    ok = c.post("/api/admin/posts", json={"title": "x"}, headers={"Origin": "https://www.dilyor.uz"})
+    assert ok.status_code == 201
+    bad = c.post("/api/admin/posts", json={"title": "y"}, headers={"Origin": "https://evil.example"})
+    assert bad.status_code == 403
+
+
+def test_lockout_follows_forwarded_client_ip(tmp_path):
+    c = proxied(tmp_path)
+    for _ in range(5):
+        c.post("/api/admin/login", json={"password": "no"}, headers={"X-Forwarded-For": "1.1.1.1, 76.76.21.9"})
+    assert c.post("/api/admin/login", json={"password": "pw"}, headers={"X-Forwarded-For": "1.1.1.1"}).status_code == 429
+    # someone else behind the same proxy is not locked out
+    assert c.post("/api/admin/login", json={"password": "pw"}, headers={"X-Forwarded-For": "2.2.2.2"}).status_code == 200
