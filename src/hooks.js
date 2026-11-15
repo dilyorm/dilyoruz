@@ -13,7 +13,6 @@ export function useMedia(query) {
   return match
 }
 
-const fmt = (n) => Number(n).toLocaleString('en-US')
 const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${r.status} ${url}`))))
 
 async function chessCom(user) {
@@ -25,32 +24,6 @@ async function chessCom(user) {
       { k: 'Blitz', v: s.chess_blitz?.last?.rating ?? '—' },
       { k: 'Bullet', v: s.chess_bullet?.last?.rating ?? '—' },
       { k: 'Puzzles peak', v: s.tactics?.highest?.rating ?? '—' },
-    ],
-  }
-}
-
-const MEDALS = ['Herald', 'Guardian', 'Crusader', 'Archon', 'Legend', 'Ancient', 'Divine', 'Immortal']
-
-async function openDota(id) {
-  const base = `https://api.opendota.com/api/players/${id}`
-  const [p, wl, heroes, names] = await Promise.all([
-    getJSON(base),
-    getJSON(`${base}/wl`),
-    getJSON(`${base}/heroes`),
-    getJSON('https://api.opendota.com/api/constants/heroes'),
-  ])
-  const total = wl.win + wl.lose
-  // Hidden match data comes back as 0-0; keep the "hidden" note instead of showing zeros.
-  if (!total) throw new Error('no public matches (turn on "Expose Public Match Data" in Dota)')
-  const top = heroes[0] && names[heroes[0].hero_id]
-  const tier = p.rank_tier ? MEDALS[Math.floor(p.rank_tier / 10) - 1] : 'Unranked'
-  return {
-    hidden: false,
-    rank: tier,
-    stats: [
-      { k: 'Matches', v: fmt(total) },
-      { k: 'Win rate', v: total ? `${((wl.win / total) * 100).toFixed(1)}%` : '—' },
-      { k: 'Main', v: top?.localized_name ?? '—' },
     ],
   }
 }
@@ -103,7 +76,6 @@ export function useHobbies(handles = HANDLES) {
     let alive = true
     const jobs = [
       handles.chessCom && ['chess', chessCom(handles.chessCom)],
-      handles.openDotaId && ['dota', openDota(handles.openDotaId)],
       handles.codeforces && ['cf', codeforces(handles.codeforces)],
       handles.monkeytype && ['typing', monkeytype(handles.monkeytype)],
       // These two go through our own API: FACEIT has no CORS, avj needs its server.

@@ -99,71 +99,6 @@ function ChessPanel({ data }) {
   )
 }
 
-/* ---------- Dota 2: blood-red page, a minimap with a hero walking mid ---------- */
-
-function Minimap() {
-  return (
-    <svg className="minimap" viewBox="0 0 300 300" aria-hidden="true">
-      <rect width="300" height="300" rx="10" fill="#1C0907" />
-      <path d="M0 300 L0 0 L300 300 Z" fill="#1B3A20" />
-      <path d="M300 0 L300 300 L0 0 Z" fill="#3D1310" opacity="0.9" />
-      <path d="M0 0 L40 0 L300 260 L300 300 L260 300 L0 40 Z" fill="#0F2A3E" opacity="0.85" />
-      <g stroke="#C7A770" strokeWidth="7" fill="none" strokeLinecap="round" opacity="0.8">
-        <path d="M34 266 L34 34 L266 34" />
-        <path d="M34 266 L266 34" />
-        <path d="M34 266 L266 266 L266 34" />
-      </g>
-      {[
-        [34, 190], [34, 110], [110, 34], [190, 34], [266, 110], [266, 190], [110, 266], [190, 266], [100, 200], [200, 100],
-      ].map(([x, y], i) => (
-        <rect key={i} x={x - 6} y={y - 6} width="12" height="12" fill={x + y < 300 || (x + y === 300 && x < 150) ? '#64D46B' : '#E5432B'} />
-      ))}
-      <circle cx="34" cy="266" r="16" fill="#64D46B" stroke="#F6E7D3" strokeWidth="3" />
-      <circle cx="266" cy="34" r="16" fill="#E5432B" stroke="#F6E7D3" strokeWidth="3" />
-      <motion.circle
-        cx="0"
-        cy="0"
-        r="8"
-        fill="#FFE500"
-        stroke="#1C0907"
-        strokeWidth="3"
-        initial={{ x: 52, y: 248 }}
-        animate={{ x: [52, 150, 150, 52], y: [248, 150, 150, 248] }}
-        transition={{ duration: 7, times: [0, 0.45, 0.6, 1], repeat: Infinity, ease: 'easeInOut' }}
-      />
-    </svg>
-  )
-}
-
-function DotaPanel({ data }) {
-  return (
-    <article className="panel panel-dota" aria-labelledby="h-dota">
-      <div className="panel-copy">
-        <h3 id="h-dota" className="panel-title">Dota 2</h3>
-        <p className="panel-lede">Five heroes, three lanes, and always one more game.</p>
-        {data.hidden ? (
-          <p className="dota-hidden">
-            Match history is private on Steam right now, so there are no numbers to show. They appear here on their own
-            once it is public.
-          </p>
-        ) : (
-          <>
-            <p className="dota-rank">
-              <span>Rank</span>
-              {data.rank}
-            </p>
-            <Stats data={data} label="Dota 2 stats" />
-          </>
-        )}
-        <a className="steam-link" href={STEAM.dota} target="_blank" rel="noreferrer">
-          Steam profile
-        </a>
-      </div>
-      <Minimap />
-    </article>
-  )
-}
-
 /* ---------- CS2: slate page, crosshair cursor, click to shoot ---------- */
 
 // FACEIT CS2 level bands (elo floor of each level) and their colours.
@@ -515,9 +450,9 @@ function IntroPanel() {
     <article className="panel panel-intro" aria-labelledby="h-play">
       <div className="panel-copy">
         <h2 id="h-play" className="intro-title">Off the clock</h2>
-        <p className="panel-lede">Seven things I do when the laptop closes. Keep scrolling, each one has its own room.</p>
+        <p className="panel-lede">Six things I do when the laptop closes. Keep scrolling, each one has its own room.</p>
         <ul className="intro-chips">
-          {['Chess', 'Dota 2', 'Codeforces', 'CS2', 'Typing', "Rubik's cube", 'Music'].map((h) => (
+          {['Chess', 'Codeforces', 'CS2', 'Typing', "Rubik's cube", 'Music'].map((h) => (
             <li key={h} className="pixel-label">
               {h}
             </li>
@@ -537,7 +472,6 @@ export default function Hobbies() {
   const panels = [
     <IntroPanel key="intro" />,
     <ChessPanel key="chess" data={data.chess} />,
-    <DotaPanel key="dota" data={data.dota} />,
     <CodeforcesPanel key="cf" data={data.cf} />,
     <CsPanel key="cs" data={data.cs2} faceit={data.faceit} />,
     <TypingPanel key="typing" data={data.typing} />,

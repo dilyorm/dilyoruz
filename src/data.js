@@ -82,13 +82,11 @@ export const TROPHIES = [
 // handle set below. Nothing here is made up.
 export const HANDLES = {
   chessCom: 'dilyorbekmuhammadjonov',
-  openDotaId: 1507943254, // steam id/dilyor_m; OpenDota shows no matches until "Expose Public Match Data" is on
   codeforces: 'dilyorbek',
   monkeytype: 'kyosand',
 }
 
 export const STEAM = {
-  dota: 'https://steamcommunity.com/id/dilyor_m',
   cs2: 'https://steamcommunity.com/profiles/76561199744640101',
 }
 
@@ -103,9 +101,6 @@ export const HOBBIES = {
       { k: 'Puzzles peak', v: '2000' },
     ],
   },
-  // Live from OpenDota. Until Dota's "Expose Public Match Data" is on, OpenDota
-  // sees no matches, so the room says so instead of showing made-up numbers.
-  dota: { hidden: true, stats: [] },
   // From the public Steam profile on 2026-11-15. Valve has no public API for
   // Premier rating or K/D, so those get typed in here when known.
   cs2: {
