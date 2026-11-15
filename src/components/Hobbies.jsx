@@ -383,7 +383,7 @@ function Listening({ data, playing, onPlay }) {
       <div className="music-cols">
         {songs.length > 0 && (
           <div>
-            <p className="pixel-label">On repeat</p>
+            <p className="pixel-label">{data.window === 'all' ? 'Most played' : 'On repeat'}</p>
             <ol className="music-songs">
               {songs.map((t) => (
                 <li key={`${t.song}-${t.artist}`}>
@@ -399,7 +399,7 @@ function Listening({ data, playing, onPlay }) {
         )}
         {artists.length > 0 && (
           <div>
-            <p className="pixel-label">{data.from_likes ? 'Liked artists' : 'Top artists, 30 days'}</p>
+            <p className="pixel-label">{data.window === 'all' ? 'Top artists, all time' : data.from_likes ? 'Liked artists' : 'Top artists, 30 days'}</p>
             <ol className="music-top">
               {artists.map((a) => (
                 <li key={a.artist}>
@@ -411,9 +411,11 @@ function Listening({ data, playing, onPlay }) {
           </div>
         )}
       </div>
-      {data.plays_30d > 0 && (
+      {(data.plays_total || data.plays_30d) > 0 && (
         <p className="pixel-label music-count">
-          {data.plays_30d} plays in 30 days, {data.plays_7d} this week
+          {data.plays_total
+            ? `${data.plays_total.toLocaleString('en-US')} plays tracked by avj, ${data.plays_30d} in the last 30 days`
+            : `${data.plays_30d} plays in 30 days, ${data.plays_7d} this week`}
         </p>
       )}
     </div>
